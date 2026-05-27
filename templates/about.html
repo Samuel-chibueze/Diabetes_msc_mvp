@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+
+{% block title %}About Project | DiabeScreen{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* About Page Specific Styles */
+    .about-header {
+        background: linear-gradient(135deg, #0b2b40 0%, #124e5f 100%);
+        padding: 2rem 2rem 1.8rem 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-header::before {
+        content: "ℹ️";
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 8rem;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    .about-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    .about-header h1 i {
+        font-size: 1.8rem;
+        background: rgba(255,255,255,0.15);
+        padding: 10px;
+        border-radius: 16px;
+    }
+
+    .about-header p {
+        opacity: 0.85;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Content Sections */
+    .content-section {
+        padding: 2rem;
+    }
+
+    .intro-card {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-radius: 1.2rem;
+        padding: 1.8rem;
+        margin-bottom: 2rem;
+        border-left: 5px solid #1c7e54;
+    }
+
+    .intro-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #1a4d5f;
+        margin-bottom: 0.5rem;
+    }
+
+    .intro-card p:last-child {
+        margin-bottom: 0;
+    }
+
+    /* Tech Stack Grid */
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .tech-card {
+        background: white;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .tech-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .tech-header {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 2px solid #e9edf2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tech-header i {
+        font-size: 1.3rem;
+        color: #1c7e54;
+    }
+
+    .tech-header h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #1a4d5f;
+        margin: 0;
+    }
+
+    .tech-body {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .tech-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .tech-list li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px dashed #eef2f8;
+    }
+
+    .tech-list li:last-child {
+        border-bottom: none;
+    }
+
+    .tech-list li i {
+        width: 24px;
+        color: #1c7e54;
+        font-size: 0.9rem;
+    }
+
+    .tech-list li span {
+        color: #2c3e44;
+        font-size: 0.9rem;
+    }
+
+    /* Features Section */
+    .features-section {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0b2b40;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .feature-item {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s;
+    }
+
+    .feature-item:hover {
+        transform: translateX(5px);
+        background: linear-gradient(135deg, #ffffff, #f8fafc);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #e8f3ef, #d4eae3);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: #1c7e54;
+    }
+
+    .feature-text {
+        flex: 1;
+    }
+
+    .feature-text strong {
+        display: block;
+        font-size: 0.9rem;
+        color: #0b2b40;
+        margin-bottom: 0.2rem;
+    }
+
+    .feature-text span {
+        font-size: 0.75rem;
+        color: #6c8b9b;
+    }
+
+    /* Model Info */
+    .model-section {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-radius: 1.2rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .model-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .model-stat {
+        flex: 1;
+        min-width: 150px;
+        text-align: center;
+        padding: 1rem;
+        background: white;
+        border-radius: 1rem;
+    }
+
+    .model-stat .value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1c7e54;
+    }
+
+    .model-stat .label {
+        font-size: 0.7rem;
+        color: #6c8b9b;
+        text-transform: uppercase;
+        margin-top: 0.3rem;
+    }
+
+    /* Team / Credits */
+    .credits-section {
+        background: linear-gradient(135deg, #e8f3ef, #d4eae3);
+        border-radius: 1.2rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .credits-section p {
+        color: #1a4d5f;
+        font-size: 0.85rem;
+    }
+
+    .credits-section i {
+        color: #1c7e54;
+        margin: 0 4px;
+    }
+
+    hr {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .about-header {
+            padding: 1.5rem;
+        }
+        
+        .content-section {
+            padding: 1rem;
+        }
+        
+        .intro-card {
+            padding: 1.2rem;
+        }
+        
+        .tech-body {
+            padding: 1rem;
+        }
+        
+        .feature-item {
+            padding: 1rem;
+        }
+        
+        .model-stat .value {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-header">
+    <h1>
+        <i class="fas fa-info-circle"></i>
+        About DiabeScreen
+    </h1>
+    <p>
+        <i class="fas fa-microscope"></i> AI-powered diabetes risk screening system
+        <i class="fas fa-heartbeat" style="margin-left: 12px;"></i> Empowering early detection
+    </p>
+</div>
+
+<div class="content-section">
+    <!-- Introduction -->
+    <div class="intro-card">
+        <p>
+            <i class="fas fa-robot" style="color: #1c7e54; margin-right: 8px;"></i>
+            <strong>DiabeScreen</strong> is an intelligent diabetes risk prediction system designed specifically for 
+            <strong>Primary Healthcare Centres</strong> to enable early detection and intervention.
+        </p>
+        <p style="margin-top: 12px;">
+            Using a <strong>Decision Tree machine learning model</strong>, the system analyzes key health indicators 
+            to assess an individual's risk of developing diabetes and provides evidence-based recommendations.
+        </p>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="tech-grid">
+        <div class="tech-card">
+            <div class="tech-header">
+                <i class="fas fa-brain"></i>
+                <h3>Machine Learning</h3>
+            </div>
+            <div class="tech-body">
+                <ul class="tech-list">
+                    <li><i class="fas fa-code-branch"></i> <span>Decision Tree Classifier</span></li>
+                    <li><i class="fas fa-chart-line"></i> <span>Scikit-learn Training Pipeline</span></li>
+                    <li><i class="fas fa-database"></i> <span>Clinical Dataset (10,000+ records)</span></li>
+                    <li><i class="fas fa-chart-simple"></i> <span>Cross-validation optimized</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <div class="tech-header">
+                <i class="fab fa-python"></i>
+                <h3>Backend</h3>
+            </div>
+            <div class="tech-body">
+                <ul class="tech-list">
+                    <li><i class="fab fa-python"></i> <span>Python 3.13+</span></li>
+                    <li><i class="fab fa-django"></i> <span>Django 6.0</span></li>
+                    <li><i class="fas fa-database"></i> <span>SQLite Database</span></li>
+                    <li><i class="fas fa-key"></i> <span>RESTful Architecture</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tech-card">
+            <div class="tech-header">
+                <i class="fas fa-desktop"></i>
+                <h3>Frontend</h3>
+            </div>
+            <div class="tech-body">
+                <ul class="tech-list">
+                    <li><i class="fab fa-html5"></i> <span>HTML5 Semantic</span></li>
+                    <li><i class="fab fa-css3-alt"></i> <span>CSS3 (Flexbox/Grid)</span></li>
+                    <li><i class="fas fa-mobile-alt"></i> <span>Fully Responsive Design</span></li>
+                    <li><i class="fas fa-chart-line"></i> <span>Interactive Data Visualization</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section">
+        <div class="section-title">
+            <i class="fas fa-star"></i>
+            Key Features
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-stethoscope"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Patient Screening</strong>
+                    <span>Quick and easy risk assessment form</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Risk Prediction</strong>
+                    <span>ML-powered risk level classification</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Referral Recommendation</strong>
+                    <span>Personalized clinical recommendations</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Prediction History</strong>
+                    <span>Track all screenings over time</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-simple"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Model Metrics</strong>
+                    <span>Real-time performance monitoring</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-print"></i>
+                </div>
+                <div class="feature-text">
+                    <strong>Printable Reports</strong>
+                    <span>Generate patient-friendly PDF reports</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Performance Info -->
+    <div class="model-section">
+        <div class="section-title" style="margin-bottom: 0.5rem;">
+            <i class="fas fa-chart-line"></i>
+            Model Performance
+        </div>
+        <p style="color: #4a6a7a; font-size: 0.85rem; margin-bottom: 1rem;">
+            Our Decision Tree model has been trained and validated on diverse clinical data
+        </p>
+        <div class="model-stats">
+            <div class="model-stat">
+                <div class="value">~85-92%</div>
+                <div class="label">Accuracy Range</div>
+            </div>
+            <div class="model-stat">
+                <div class="value">High</div>
+                <div class="label">Sensitivity</div>
+            </div>
+            <div class="model-stat">
+                <div class="value">High</div>
+                <div class="label">Specificity</div>
+            </div>
+            <div class="model-stat">
+                <div class="value">Real-time</div>
+                <div class="label">Inference Speed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clinical Guidelines -->
+    <div class="model-section" style="background: linear-gradient(135deg, #fefce8, #fef9c3);">
+        <div class="section-title" style="margin-bottom: 0.5rem;">
+            <i class="fas fa-book-medical"></i>
+            Clinical Guidelines
+        </div>
+        <p style="color: #4a6a7a; font-size: 0.85rem; line-height: 1.5;">
+            The screening system follows risk assessment parameters aligned with 
+            <strong>American Diabetes Association (ADA)</strong> and 
+            <strong>WHO diabetes screening recommendations</strong>. Key risk factors include:
+            age, BMI, blood pressure, glucose levels, family history, and lifestyle factors.
+        </p>
+    </div>
+
+    <!-- Credits -->
+    <div class="credits-section">
+        <p>
+            <i class="fas fa-heart" style="color: #991b1b;"></i>
+            Developed for Primary Healthcare Centres to enable early diabetes detection
+            <i class="fas fa-heart" style="color: #991b1b;"></i>
+        </p>
+        <p style="margin-top: 10px; font-size: 0.75rem;">
+            <i class="fas fa-code"></i> Built with Django & Machine Learning |
+            <i class="fas fa-chart-line"></i> Continuous improvement through feedback |
+            <i class="fas fa-shield-alt"></i> HIPAA-compliant practices
+        </p>
+        <p style="margin-top: 12px; font-size: 0.7rem; color: #6c8b9b;">
+            Version 1.0 | © 2025 DiabeScreen | Evidence-based risk assessment
+        </p>
+    </div>
+</div>
+{% endblock %}

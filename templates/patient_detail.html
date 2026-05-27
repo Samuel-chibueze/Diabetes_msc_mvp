@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+
+{% block title %}Patient Details | DiabeScreen{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Patient Details Page Styles */
+    .details-header {
+        background: linear-gradient(135deg, #0b2b40 0%, #124e5f 100%);
+        padding: 2rem 2rem 1.8rem 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .details-header::before {
+        content: "👤";
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 8rem;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    .details-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    .details-header h1 i {
+        font-size: 1.8rem;
+        background: rgba(255,255,255,0.15);
+        padding: 10px;
+        border-radius: 16px;
+    }
+
+    .header-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+    }
+
+    .meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255,255,255,0.12);
+        padding: 0.4rem 1rem;
+        border-radius: 30px;
+        font-size: 0.8rem;
+    }
+
+    /* Patient Summary Banner */
+    .patient-summary {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        padding: 1.5rem 2rem;
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 1px solid #e9edf2;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .risk-badge-large {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.6rem 1.5rem;
+        border-radius: 60px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .risk-badge-large i {
+        font-size: 1.3rem;
+    }
+
+    .risk-high-bg { background: linear-gradient(115deg, #9b2c2c, #7f1a1a); }
+    .risk-moderate-bg { background: linear-gradient(115deg, #c2410c, #9a3412); }
+    .risk-low-bg { background: linear-gradient(115deg, #2b6e4f, #1f5e41); }
+    .risk-none-bg { background: linear-gradient(115deg, #2c5f2d, #1f4f21); }
+
+    .patient-id-badge {
+        background: white;
+        padding: 0.4rem 1.2rem;
+        border-radius: 30px;
+        color: #0b2b40;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    /* Info Grid Layout */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 2px solid #e9edf2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-header i {
+        font-size: 1.3rem;
+        color: #1c7e54;
+    }
+
+    .card-header h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #1a4d5f;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0.7rem 0;
+        border-bottom: 1px dashed #eef2f8;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #8ba0ae;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0b2b40;
+    }
+
+    .info-value-large {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #1c7e54;
+    }
+
+    /* Recommendation Section */
+    .recommendation-section {
+        margin: 0 2rem 2rem 2rem;
+    }
+
+    .recommendation-card {
+        background: linear-gradient(135deg, #e8f3ef, #d4eae3);
+        border-radius: 1.2rem;
+        padding: 1.5rem;
+        border-left: 5px solid #1c7e54;
+    }
+
+    .recommendation-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-header i {
+        font-size: 1.5rem;
+        color: #1c7e54;
+    }
+
+    .recommendation-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0b2b40;
+        margin: 0;
+    }
+
+    .recommendation-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #1a4d5f;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        padding: 0 2rem 2rem 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.3rem;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-primary {
+        background: linear-gradient(105deg, #0f5c3e 0%, #1c7e54 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(21, 98, 61, 0.3);
+    }
+
+    .btn-secondary {
+        background: #eef2f7;
+        color: #1a4d5f;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .btn-danger:hover {
+        background: #fecaca;
+        transform: translateY(-2px);
+    }
+
+    /* Vital Signs Indicators */
+    .vital-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .vital-normal { background: #166534; }
+    .vital-elevated { background: #b45309; }
+    .vital-high { background: #991b1b; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .info-grid {
+            padding: 1rem;
+            gap: 1rem;
+        }
+        
+        .patient-summary {
+            padding: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .details-header {
+            padding: 1.5rem;
+        }
+        
+        .recommendation-section {
+            margin: 0 1rem 1rem 1rem;
+        }
+        
+        .action-buttons {
+            padding: 0 1rem 1.5rem 1rem;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .navbar, .action-buttons, .footer-note {
+            display: none;
+        }
+        .info-card {
+            break-inside: avoid;
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+        .recommendation-card {
+            break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="details-header">
+    <h1>
+        <i class="fas fa-user-md"></i>
+        Patient Health Profile
+    </h1>
+    <div class="header-meta">
+        <div class="meta-item">
+            <i class="fas fa-calendar-alt"></i>
+            Assessment Date: {{ patient.created_at|date:"F d, Y"|default:"N/A" }}
+        </div>
+        <div class="meta-item">
+            <i class="fas fa-chart-line"></i>
+            Screening ID: #{{ patient.id }}
+        </div>
+    </div>
+</div>
+
+<div class="patient-summary">
+    <div class="risk-badge-large 
+        {% if patient.risk_level|lower == 'high' or patient.risk_level|lower == 'high risk' %}risk-high-bg
+        {% elif patient.risk_level|lower == 'moderate' or patient.risk_level|lower == 'medium' or patient.risk_level|lower == 'moderate risk' %}risk-moderate-bg
+        {% elif patient.risk_level|lower == 'low' or patient.risk_level|lower == 'low risk' %}risk-low-bg
+        {% else %}risk-none-bg{% endif %}">
+        <i class="fas fa-heartbeat"></i>
+        Risk Level: {{ patient.risk_level }}
+    </div>
+    <div class="patient-id-badge">
+        <i class="fas fa-id-card"></i> Patient ID: #{{ patient.id }}
+    </div>
+</div>
+
+<div class="info-grid">
+    <!-- Personal Information Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-user-circle"></i>
+            <h3>Personal Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-hashtag" style="margin-right: 4px;"></i> Patient ID
+                </span>
+                <span class="info-value">#{{ patient.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-calendar"></i> Age
+                </span>
+                <span class="info-value-large">{{ patient.age }} years</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-venus-mars"></i> Gender
+                </span>
+                <span class="info-value">
+                    {% if patient.gender == 'M' %}
+                        <i class="fas fa-mars"></i> Male
+                    {% elif patient.gender == 'F' %}
+                        <i class="fas fa-venus"></i> Female
+                    {% else %}
+                        {{ patient.gender|default:"Not specified" }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vital Signs Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-heartbeat"></i>
+            <h3>Vital Signs & Measurements</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-weight-scale"></i> BMI
+                </span>
+                <span class="info-value">
+                    {{ patient.bmi|default:"N/A" }}
+                    {% if patient.bmi %}
+                        {% if patient.bmi|floatformat:1|add:"0" < 18.5 %}
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Underweight)</span>
+                        {% elif patient.bmi|floatformat:1|add:"0" < 25 %}
+                            <span style="font-size: 0.7rem; color: #166534;"> (Normal)</span>
+                        {% elif patient.bmi|floatformat:1|add:"0" < 30 %}
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Overweight)</span>
+                        {% else %}
+                            <span style="font-size: 0.7rem; color: #991b1b;"> (Obese)</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-tachometer-alt"></i> Blood Pressure
+                </span>
+                <span class="info-value">
+                    {{ patient.blood_pressure|default:"N/A" }}
+                    {% if patient.blood_pressure %}
+                        <span class="vital-indicator 
+                            {% if patient.blood_pressure|cut:"/"|first|add:"0" < 120 %}vital-normal
+                            {% elif patient.blood_pressure|cut:"/"|first|add:"0" < 140 %}vital-elevated
+                            {% else %}vital-high{% endif %}"></span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-tint"></i> Glucose Level
+                </span>
+                <span class="info-value">
+                    {{ patient.glucose_level|default:"N/A" }} mg/dL
+                    {% if patient.glucose_level %}
+                        {% if patient.glucose_level|add:"0" < 100 %}
+                            <span style="font-size: 0.7rem; color: #166534;"> (Normal)</span>
+                        {% elif patient.glucose_level|add:"0" < 126 %}
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Prediabetes)</span>
+                        {% else %}
+                            <span style="font-size: 0.7rem; color: #991b1b;"> (Diabetes Range)</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Assessment Card -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-chart-line"></i>
+            <h3>Risk Assessment</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-exclamation-triangle"></i> Risk Level
+                </span>
+                <span class="info-value-large" style="
+                    {% if patient.risk_level|lower == 'high' or patient.risk_level|lower == 'high risk' %}color: #991b1b;
+                    {% elif patient.risk_level|lower == 'moderate' or patient.risk_level|lower == 'medium' %}color: #b45309;
+                    {% elif patient.risk_level|lower == 'low' or patient.risk_level|lower == 'low risk' %}color: #166534;
+                    {% else %}color: #3730a3;{% endif %}">
+                    {{ patient.risk_level }}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-calendar-week"></i> Screening Date
+                </span>
+                <span class="info-value">{{ patient.created_at|date:"F d, Y \a\t g:i A"|default:"N/A" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Health Factors Card (if available) -->
+    {% if patient.family_history or patient.smoking_status or patient.physical_activity %}
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-notes-medical"></i>
+            <h3>Additional Health Factors</h3>
+        </div>
+        <div class="card-body">
+            {% if patient.family_history %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-users"></i> Family History
+                </span>
+                <span class="info-value">{{ patient.family_history }}</span>
+            </div>
+            {% endif %}
+            {% if patient.smoking_status %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-smoking"></i> Smoking Status
+                </span>
+                <span class="info-value">{{ patient.smoking_status }}</span>
+            </div>
+            {% endif %}
+            {% if patient.physical_activity %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-person-walking"></i> Physical Activity
+                </span>
+                <span class="info-value">{{ patient.physical_activity }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Recommendation Section -->
+<div class="recommendation-section">
+    <div class="recommendation-card">
+        <div class="recommendation-header">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>Clinical Recommendation</h3>
+        </div>
+        <div class="recommendation-text">
+            {{ patient.recommendation|default:"Based on the risk assessment, please consult with a healthcare provider for a comprehensive evaluation and personalized care plan." }}
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="action-buttons">
+    <a href="/history/" class="btn-action btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to History
+    </a>
+    <a href="#" onclick="window.print(); return false;" class="btn-action btn-secondary">
+        <i class="fas fa-print"></i> Print Report
+    </a>
+    {% if user.is_authenticated and user.is_staff %}
+    <a href="/patient/{{ patient.id }}/edit/" class="btn-action btn-primary">
+        <i class="fas fa-edit"></i> Edit Record
+    </a>
+    <button class="btn-action btn-danger" onclick="confirmDelete({{ patient.id }})">
+        <i class="fas fa-trash-alt"></i> Delete Record
+    </button>
+    {% endif %}
+</div>
+
+<script>
+    function confirmDelete(patientId) {
+        if (confirm('Are you sure you want to delete this patient record? This action cannot be undone.')) {
+            window.location.href = '/patient/' + patientId + '/delete/';
+        }
+    }
+    
+    // Add vital signs interpretation tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight abnormal values
+        const glucoseValue = "{{ patient.glucose_level|default:'0' }}";
+        if (glucoseValue && parseInt(glucoseValue) >= 126) {
+            const glucoseRow = document.querySelector('.info-row:has(.fa-tint) .info-value');
+            if (glucoseRow) {
+                glucoseRow.style.fontWeight = '800';
+            }
+        }
+        
+        const bpValue = "{{ patient.blood_pressure|default:'' }}";
+        if (bpValue) {
+            const systolic = parseInt(bpValue.split('/')[0]);
+            if (systolic >= 140) {
+                const bpRow = document.querySelector('.info-row:has(.fa-tachometer-alt) .info-value');
+                if (bpRow) {
+                    bpRow.style.fontWeight = '800';
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

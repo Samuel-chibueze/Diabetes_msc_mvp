@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction Result | DiabeScreen{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Result Page Specific Styles */
+    .result-header {
+        background: linear-gradient(135deg, #0b2b40 0%, #124e5f 100%);
+        padding: 2rem 2rem 1.8rem 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .result-header::before {
+        content: "📋";
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 8rem;
+        opacity: 0.08;
+        pointer-events: none;
+    }
+
+    .result-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-header h1 i {
+        font-size: 1.8rem;
+        background: rgba(255,255,255,0.15);
+        padding: 10px;
+        border-radius: 16px;
+    }
+
+    .result-header p {
+        opacity: 0.85;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Risk Banner */
+    .risk-banner {
+        margin: 1.5rem 2rem 0 2rem;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .risk-banner-content {
+        padding: 2rem;
+        text-align: center;
+        color: white;
+    }
+
+    .risk-banner-content i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .risk-banner-content h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .risk-banner-content p {
+        font-size: 1rem;
+        opacity: 0.95;
+    }
+
+    .risk-high-bg { background: linear-gradient(135deg, #991b1b, #7f1a1a); }
+    .risk-moderate-bg { background: linear-gradient(135deg, #c2410c, #9a3412); }
+    .risk-low-bg { background: linear-gradient(135deg, #166534, #14532d); }
+    .risk-none-bg { background: linear-gradient(135deg, #1e3a5f, #1e2a4a); }
+
+    /* Recommendation Section */
+    .recommendation-section {
+        padding: 2rem;
+    }
+
+    .recommendation-card {
+        background: linear-gradient(135deg, #f0f9f4, #e6f3ec);
+        border-radius: 1.2rem;
+        padding: 1.5rem;
+        border-left: 5px solid #1c7e54;
+    }
+
+    .recommendation-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-header i {
+        font-size: 1.5rem;
+        color: #1c7e54;
+    }
+
+    .recommendation-header h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0b2b40;
+        margin: 0;
+    }
+
+    .recommendation-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #1a4d5f;
+    }
+
+    /* Info Grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 0 2rem 2rem 2rem;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 1.2rem;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .info-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        padding: 1rem 1.5rem;
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-bottom: 2px solid #e9edf2;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .card-header i {
+        font-size: 1.2rem;
+        color: #1c7e54;
+    }
+
+    .card-header h3 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #1a4d5f;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.2rem 1.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0.7rem 0;
+        border-bottom: 1px dashed #eef2f8;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #8ba0ae;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0b2b40;
+    }
+
+    .info-value-large {
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    /* Health indicators */
+    .health-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-left: 8px;
+    }
+
+    .normal { background: #166534; box-shadow: 0 0 4px #166534; }
+    .elevated { background: #b45309; box-shadow: 0 0 4px #b45309; }
+    .high { background: #991b1b; box-shadow: 0 0 4px #991b1b; }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        padding: 0 2rem 2rem 2rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.3rem;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: linear-gradient(105deg, #0f5c3e 0%, #1c7e54 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(21, 98, 61, 0.3);
+    }
+
+    .btn-secondary {
+        background: #eef2f7;
+        color: #1a4d5f;
+    }
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+    }
+
+    hr {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .result-header {
+            padding: 1.5rem;
+        }
+        
+        .risk-banner {
+            margin: 1rem 1rem 0 1rem;
+        }
+        
+        .risk-banner-content {
+            padding: 1.5rem;
+        }
+        
+        .risk-banner-content h2 {
+            font-size: 1.4rem;
+        }
+        
+        .recommendation-section,
+        .info-grid,
+        .action-buttons {
+            padding: 1rem;
+        }
+        
+        .info-grid {
+            gap: 1rem;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .navbar, .action-buttons, .footer-note {
+            display: none;
+        }
+        .info-card, .recommendation-card {
+            break-inside: avoid;
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-header">
+    <h1>
+        <i class="fas fa-stethoscope"></i>
+        Diabetes Risk Assessment Result
+    </h1>
+    <p>
+        <i class="fas fa-chart-line"></i> Based on your health data and clinical guidelines
+        <i class="fas fa-calendar-alt" style="margin-left: 12px;"></i> {{ patient.created_at|date:"F d, Y \a\t g:i A"|default:"Just now" }}
+    </p>
+</div>
+
+<!-- Risk Level Banner -->
+<div class="risk-banner">
+    <div class="risk-banner-content 
+        {% if patient.risk_level|lower == 'high' or patient.risk_level|lower == 'high risk' %}risk-high-bg
+        {% elif patient.risk_level|lower == 'moderate' or patient.risk_level|lower == 'medium' or patient.risk_level|lower == 'moderate risk' %}risk-moderate-bg
+        {% elif patient.risk_level|lower == 'low' or patient.risk_level|lower == 'low risk' %}risk-low-bg
+        {% else %}risk-none-bg{% endif %}">
+        <i class="fas fa-heartbeat"></i>
+        <h2>Risk Level: {{ patient.risk_level }}</h2>
+        <p>This assessment is based on the information you provided</p>
+    </div>
+</div>
+
+<!-- Recommendation Section -->
+<div class="recommendation-section">
+    <div class="recommendation-card">
+        <div class="recommendation-header">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>Clinical Recommendation</h3>
+        </div>
+        <div class="recommendation-text">
+            {{ patient.recommendation|default:"Based on your risk assessment, we recommend consulting with a healthcare provider for a comprehensive evaluation and personalized care plan. Regular monitoring and lifestyle modifications may help manage your risk factors." }}
+        </div>
+    </div>
+</div>
+
+<!-- Patient Information Grid -->
+<div class="info-grid">
+    <!-- Personal Information -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-user-circle"></i>
+            <h3>Personal Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-hashtag"></i> Screening ID
+                </span>
+                <span class="info-value">#{{ patient.id }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-calendar"></i> Age
+                </span>
+                <span class="info-value info-value-large">{{ patient.age }} years</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-venus-mars"></i> Gender
+                </span>
+                <span class="info-value">
+                    {% if patient.gender == 'M' %}
+                        <i class="fas fa-mars"></i> Male
+                    {% elif patient.gender == 'F' %}
+                        <i class="fas fa-venus"></i> Female
+                    {% else %}
+                        {{ patient.gender|default:"Not specified" }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Metrics -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-heartbeat"></i>
+            <h3>Health Metrics</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-weight-scale"></i> BMI
+                </span>
+                <span class="info-value">
+                    {{ patient.bmi|default:"N/A" }}
+                    {% if patient.bmi %}
+                        {% if patient.bmi|floatformat:1|add:"0" < 18.5 %}
+                            <span class="health-indicator elevated"></span>
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Underweight)</span>
+                        {% elif patient.bmi|floatformat:1|add:"0" < 25 %}
+                            <span class="health-indicator normal"></span>
+                            <span style="font-size: 0.7rem; color: #166534;"> (Normal)</span>
+                        {% elif patient.bmi|floatformat:1|add:"0" < 30 %}
+                            <span class="health-indicator elevated"></span>
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Overweight)</span>
+                        {% else %}
+                            <span class="health-indicator high"></span>
+                            <span style="font-size: 0.7rem; color: #991b1b;"> (Obese)</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-tachometer-alt"></i> Blood Pressure
+                </span>
+                <span class="info-value">
+                    {{ patient.blood_pressure|default:"N/A" }}
+                    {% if patient.blood_pressure %}
+                        {% with systolic=patient.blood_pressure|cut:"/"|first|add:"0" %}
+                            {% if systolic < 120 %}
+                                <span class="health-indicator normal"></span>
+                            {% elif systolic < 140 %}
+                                <span class="health-indicator elevated"></span>
+                            {% else %}
+                                <span class="health-indicator high"></span>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-tint"></i> Glucose Level
+                </span>
+                <span class="info-value">
+                    {{ patient.glucose_level|default:"N/A" }} mg/dL
+                    {% if patient.glucose_level %}
+                        {% if patient.glucose_level|add:"0" < 100 %}
+                            <span class="health-indicator normal"></span>
+                            <span style="font-size: 0.7rem; color: #166534;"> (Normal)</span>
+                        {% elif patient.glucose_level|add:"0" < 126 %}
+                            <span class="health-indicator elevated"></span>
+                            <span style="font-size: 0.7rem; color: #b45309;"> (Prediabetes)</span>
+                        {% else %}
+                            <span class="health-indicator high"></span>
+                            <span style="font-size: 0.7rem; color: #991b1b;"> (Diabetes Range)</span>
+                        {% endif %}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Factors -->
+    <div class="info-card">
+        <div class="card-header">
+            <i class="fas fa-notes-medical"></i>
+            <h3>Risk Factors</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-users"></i> Family History
+                </span>
+                <span class="info-value">
+                    {% if patient.family_history %}
+                        <i class="fas fa-check-circle" style="color: #b45309;"></i> Yes
+                    {% else %}
+                        <i class="fas fa-check-circle" style="color: #166534;"></i> No
+                    {% endif %}
+                </span>
+            </div>
+            {% if patient.smoking_status %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-smoking"></i> Smoking Status
+                </span>
+                <span class="info-value">{{ patient.smoking_status }}</span>
+            </div>
+            {% endif %}
+            {% if patient.physical_activity %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-person-walking"></i> Physical Activity
+                </span>
+                <span class="info-value">{{ patient.physical_activity }}</span>
+            </div>
+            {% endif %}
+            {% if patient.diet %}
+            <div class="info-row">
+                <span class="info-label">
+                    <i class="fas fa-utensils"></i> Diet
+                </span>
+                <span class="info-value">{{ patient.diet }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="action-buttons">
+    <a href="/" class="btn-action btn-primary">
+        <i class="fas fa-stethoscope"></i> New Screening
+    </a>
+    <a href="/history/" class="btn-action btn-secondary">
+        <i class="fas fa-clock-rotate-left"></i> View History
+    </a>
+    <a href="#" onclick="window.print(); return false;" class="btn-action btn-secondary">
+        <i class="fas fa-print"></i> Print Report
+    </a>
+</div>
+
+<script>
+    // Add any interactive features here
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll to top on page load
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Animate risk banner entrance
+        const riskBanner = document.querySelector('.risk-banner');
+        if (riskBanner) {
+            riskBanner.style.opacity = '0';
+            riskBanner.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                riskBanner.style.transition = 'all 0.5s ease';
+                riskBanner.style.opacity = '1';
+                riskBanner.style.transform = 'translateY(0)';
+            }, 100);
+        }
+    });
+</script>
+{% endblock %}

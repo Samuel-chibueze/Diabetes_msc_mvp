@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Diabetes Screening System | HealthAI</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef2f7 0%, #dce5ec 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== MODERN NAVIGATION BAR ========== */
+        .navbar {
+            background: linear-gradient(135deg, #0b2b40 0%, #124e5f 100%);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #2c9b77, #1e7a5c);
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(120deg, #ffffff, #b8e1f0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #e2edf2;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.6rem 1.3rem;
+            border-radius: 40px;
+            transition: all 0.25s ease;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link i {
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+
+        .nav-link:hover {
+            background: rgba(44, 155, 119, 0.25);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #2c9b77, #1e7a5c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 2rem;
+            padding: 3rem 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: "🩺";
+            position: absolute;
+            right: -30px;
+            bottom: -30px;
+            font-size: 12rem;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(44, 122, 94, 0.12);
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1a5d4a;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0b2b40, #1c7e54);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #4a6a7a;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            background: linear-gradient(105deg, #0f5c3e 0%, #1c7e54 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(21, 98, 61, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(21, 98, 61, 0.4);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #1c7e54;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0b2b40;
+        }
+
+        .stat-label {
+            color: #5f7f8f;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            background: white;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+            margin-bottom: 2rem;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #0b2b40 0%, #124e5f 100%);
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+
+        .form-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-header p {
+            opacity: 0.85;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-container {
+            padding: 2rem;
+        }
+
+        .form-container form p {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-container label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #1a4d5f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-container label i {
+            color: #2c7a5e;
+            font-size: 0.85rem;
+        }
+
+        .form-container input, 
+        .form-container select, 
+        .form-container textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            font-family: 'Inter', monospace;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            background: #fefefe;
+            transition: all 0.25s ease;
+            outline: none;
+            color: #0f2c38;
+        }
+
+        .form-container input:focus,
+        .form-container select:focus,
+        .form-container textarea:focus {
+            border-color: #2c7a5e;
+            box-shadow: 0 0 0 4px rgba(44, 122, 94, 0.15);
+            background: #ffffff;
+        }
+
+        .form-container input[type="checkbox"], 
+        .form-container input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+            transform: scale(1.1);
+            accent-color: #2c7a5e;
+        }
+
+        .helptext {
+            font-size: 0.7rem;
+            color: #6c8b9b;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .errorlist {
+            color: #dc2626;
+            list-style: none;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            font-weight: 500;
+            background: #fee2e2;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        .btn-predict {
+            background: linear-gradient(105deg, #0f5c3e 0%, #1c7e54 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 1rem 1.8rem;
+            border-radius: 3rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-predict:hover {
+            background: linear-gradient(105deg, #0a4a32 0%, #146b45 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(21, 98, 61, 0.3);
+        }
+
+        /* Result Section */
+        .result-section {
+            background: linear-gradient(135deg, #f9fbfd 0%, #f0f5f9 100%);
+            border-top: 1px solid rgba(44, 122, 94, 0.2);
+            padding: 2rem;
+        }
+
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(44, 122, 94, 0.12);
+            border-radius: 40px;
+            padding: 0.4rem 1.3rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #1a5d4a;
+            margin-bottom: 1rem;
+        }
+
+        .risk-level {
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 0.5rem 0;
+        }
+
+        .risk-label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #334e68;
+        }
+
+        .risk-value {
+            padding: 0.3rem 1.4rem;
+            border-radius: 60px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .risk-high { background: linear-gradient(115deg, #9b2c2c, #7f1a1a); }
+        .risk-moderate { background: linear-gradient(115deg, #c2410c, #9a3412); }
+        .risk-low { background: linear-gradient(115deg, #2b6e4f, #1f5e41); }
+        .risk-none { background: linear-gradient(115deg, #2c5f2d, #1f4f21); }
+
+        .recommendation-box {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 5px solid #2c7a5e;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .recommendation-box strong {
+            color: #0f4c2d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info-note {
+            font-size: 0.7rem;
+            color: #7a9aaa;
+            text-align: center;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* Features Section */
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e8f3ef, #d4eae3);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem auto;
+            font-size: 2rem;
+            color: #1c7e54;
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0b2b40;
+        }
+
+        .feature-card p {
+            color: #5f7f8f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.8rem;
+            color: #5f7f8f;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0.8rem 1.2rem;
+            }
+            .nav-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            .form-container, .result-section, .form-header {
+                padding: 1.3rem;
+            }
+            .risk-level {
+                font-size: 1.5rem;
+            }
+            .risk-value {
+                font-size: 1.3rem;
+                padding: 0.2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-area">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">DiabeScreen</div>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">
+                    <i class="fas fa-home"></i> 
+                    <span>Home</span>
+                </a>
+                <a href="/history/" class="nav-link">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    <span>History</span>
+                </a>
+                <a href="/metrics/" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Metrics</span>
+                </a>
+                <a href="/about/" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-badge">
+                <i class="fas fa-microscope"></i> Smart-Powered Screening
+            </div>
+            <h1 class="hero-title">
+                Know Your Diabetes Risk<br>Take Control Today
+            </h1>
+            <p class="hero-subtitle">
+                Advanced risk assessment using clinical guidelines. Get instant, confidential results with personalized recommendations.
+            </p>
+            <a href="#screening-form" class="cta-button">
+                <i class="fas fa-stethoscope"></i> Start Screening
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-globe"></i></div>
+                <div class="stat-number">463M+</div>
+                <div class="stat-label">People living with diabetes worldwide</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-number">1 in 2</div>
+                <div class="stat-label">Cases remain undiagnosed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="stat-number">70%</div>
+                <div class="stat-label">Can be prevented with early intervention</div>
+            </div>
+        </div>
+
+        <!-- Screening Form Section -->
+        <div class="form-section" id="screening-form">
+            <div class="form-header">
+                <h2>
+                    <i class="fas fa-clipboard-list"></i>
+                    Diabetes Risk Assessment
+                </h2>
+                <p>Fill in the details below for an instant risk evaluation</p>
+            </div>
+            <div class="form-container">
+                <form method="POST" id="screeningForm">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="info-note">
+                        <i class="fas fa-info-circle"></i> All fields are required for accurate prediction
+                    </div>
+                    <button type="submit" class="btn-predict" id="predictBtn">
+                        <i class="fas fa-chart-line"></i> Predict Risk Profile
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+
+            {% if prediction %}
+            <div class="result-section" id="resultSection">
+                <div class="risk-badge">
+                    <i class="fas fa-microscope"></i> SCREENING RESULT
+                </div>
+                <div class="risk-level">
+                    <span class="risk-label"><i class="fas fa-exclamation-triangle"></i> Risk Level:</span>
+                    <span class="risk-value 
+                        {% if prediction|lower == 'high' or prediction|lower == 'high risk' %}risk-high
+                        {% elif prediction|lower == 'moderate' or prediction|lower == 'medium' or prediction|lower == 'moderate risk' %}risk-moderate
+                        {% elif prediction|lower == 'low' or prediction|lower == 'low risk' %}risk-low
+                        {% else %}risk-none{% endif %}
+                    ">
+                        <i class="fas fa-heartbeat"></i> {{ prediction }}
+                    </span>
+                </div>
+                <div class="recommendation-box">
+                    <strong>
+                        <i class="fas fa-clipboard-list"></i> Clinical recommendation
+                    </strong>
+                    <p>{{ recommendation }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-simple"></i>
+                </div>
+                <h3>Evidence-Based Algorithm</h3>
+                <p>Based on ADA clinical guidelines and validated risk factors for accurate assessment</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Secure & Confidential</h3>
+                <p>Your health data is encrypted and never shared. Complete privacy guaranteed</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Instant Results</h3>
+                <p>Get immediate risk assessment with personalized lifestyle recommendations</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Track Progress</h3>
+                <p>Monitor your risk over time with history and metrics tracking features</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <i class="fas fa-microscope"></i> Evidence-based screening | 
+        <i class="fas fa-lock"></i> Secure & confidential | 
+        <i class="fas fa-chart-simple"></i> Real-time analysis
+    </div>
+
+    <script>
+        (function() {
+            const form = document.getElementById('screeningForm');
+            const btn = document.getElementById('predictBtn');
+            
+            if (form && btn) {
+                form.addEventListener('submit', function() {
+                    btn.classList.add('loading');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Analyzing your data...';
+                    setTimeout(function() {
+                        if (btn.classList.contains('loading')) {
+                            btn.innerHTML = originalHTML;
+                            btn.classList.remove('loading');
+                        }
+                    }, 5000);
+                });
+            }
+            
+            if (document.getElementById('resultSection')) {
+                setTimeout(() => {
+                    document.getElementById('resultSection').scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }, 100);
+            }
+
+            // Auto-add icons to form labels
+            const labels = document.querySelectorAll('.form-container label');
+            labels.forEach(label => {
+                if (!label.querySelector('i')) {
+                    const icon = document.createElement('i');
+                    icon.className = 'fas fa-stethoscope';
+                    icon.style.marginRight = '6px';
+                    label.prepend(icon);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
