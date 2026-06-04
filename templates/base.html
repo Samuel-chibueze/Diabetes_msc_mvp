@@ -23,14 +23,13 @@
             flex-direction: column;
         }
 
-        /* === MODERN NAVIGATION BAR === */
+        /* === NAVIGATION BAR (NON-STICKY) === */
         .navbar {
             background: #0f2b3d;
-            backdrop-filter: blur(0px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
+            position: relative;
             z-index: 100;
+            width: 100%;
         }
 
         .nav-container {
@@ -48,6 +47,13 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .logo-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
         }
 
         .logo-icon {
@@ -73,6 +79,7 @@
             color: transparent;
         }
 
+        /* desktop nav links */
         .nav-links {
             display: flex;
             gap: 0.5rem;
@@ -104,18 +111,171 @@
             transform: translateY(-1px);
         }
 
-        .nav-link:active {
-            transform: translateY(1px);
-        }
-
-        /* active state (you can add class 'active' dynamically if needed) */
         .nav-link.active {
             background: #2c9b77;
             color: white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        /* main content wrapper */
+        /* === MOBILE MENU BUTTON === */
+        .mobile-menu-toggle {
+            display: none;
+            background: rgba(44, 155, 119, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #2c9b77;
+            transform: scale(1.05);
+        }
+
+        .mobile-menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* === MODAL OVERLAY (mobile menu) - NOT STICKY, ELEGANT === */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(15, 43, 61, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.3s ease, opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-menu-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .mobile-menu-card {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            width: 85%;
+            max-width: 340px;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+            transform: translateY(30px) scale(0.95);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            text-align: center;
+        }
+
+        .mobile-menu-overlay.active .mobile-menu-card {
+            transform: translateY(0) scale(1);
+        }
+
+        .mobile-menu-header {
+            background: linear-gradient(135deg, #0f2b3d, #1a4a62);
+            padding: 1.8rem 1rem;
+            color: white;
+        }
+
+        .mobile-menu-header h3 {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .mobile-menu-header h3 i {
+            background: #2c9b77;
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .mobile-menu-header p {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+
+        .mobile-menu-items {
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 14px;
+            padding: 0.9rem 1.5rem;
+            margin: 0;
+            background: #ffffff;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #0f2b3d;
+            transition: all 0.25s ease;
+            font-size: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mobile-nav-link i {
+            font-size: 1.2rem;
+            width: 28px;
+            color: #2c9b77;
+        }
+
+        .mobile-nav-link.active {
+            background: #e0f2e9;
+            border-left: 4px solid #2c9b77;
+            color: #0f2b3d;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(44, 155, 119, 0.15);
+        }
+
+        .mobile-nav-link:active {
+            transform: scale(0.97);
+        }
+
+        .close-menu-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .close-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* main content */
         .main-content {
             flex: 1;
             max-width: 1280px;
@@ -124,7 +284,6 @@
             width: 100%;
         }
 
-        /* card container for pages — each child page will inherit this via block content */
         .page-card {
             background: #ffffff;
             border-radius: 2rem;
@@ -133,47 +292,10 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        /* inner spacing for content (each page can override but this is a nice default) */
         .page-card > :first-child {
             padding: 2rem 2rem 2rem 2rem;
         }
 
-        /* custom utility for full-width no extra padding if needed */
-        .no-padding {
-            padding: 0 !important;
-        }
-
-        /* subtle hr replacement — no ugly <hr> tags */
-        .divider-light {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
-            margin: 1rem 0;
-        }
-
-        /* responsivity */
-        @media (max-width: 720px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 0.8rem 1.2rem;
-            }
-            .nav-links {
-                width: 100%;
-                justify-content: space-between;
-            }
-            .nav-link {
-                padding: 0.5rem 0.9rem;
-                font-size: 0.85rem;
-            }
-            .page-card > :first-child {
-                padding: 1.5rem;
-            }
-            .main-content {
-                margin: 1.2rem auto;
-            }
-        }
-
-        /* optional small footer for extra elegance */
         .footer-note {
             text-align: center;
             padding: 1.5rem;
@@ -184,23 +306,98 @@
             background: transparent;
         }
 
-        /* Override any legacy hr that might appear in children */
+        /* === RESPONSIVE: Show mobile menu button, hide desktop links === */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.8rem 1.2rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .mobile-menu-toggle {
+                display: flex;
+            }
+            .page-card > :first-child {
+                padding: 1.5rem;
+            }
+            .main-content {
+                margin: 1.2rem auto;
+            }
+        }
+
+        /* Tablet landscape: optionally show desktop but keep hamburger for small */
+        @media (min-width: 769px) {
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+
         hr {
             display: none;
         }
 
-        /* smooth interactive elements */
         button, .btn, input, select, textarea {
             font-family: inherit;
         }
+
+        /* Demo content styling */
+        .hero-welcome {
+            text-align: center;
+        }
+        
+        .btn-demo {
+            background: #2c9b77;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        
+        .btn-demo:hover {
+            background: #227a5d;
+            transform: translateY(-2px);
+        }
+        
+        .grid-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        .stat-card {
+            background: #f1f5f9;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-card i {
+            font-size: 1.8rem;
+            color: #2c9b77;
+            margin-bottom: 8px;
+            display: block;
+        }
     </style>
 
-    <!-- additional block for page-specific head content (CSS, meta) -->
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
-    <!-- modern navigation with icon integration -->
+    <!-- NON-STICKY NAVIGATION -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo-area">
@@ -211,6 +408,8 @@
                     <div class="logo-text">DiabeScreen</div>
                 </a>
             </div>
+            
+            <!-- Desktop Navigation Links -->
             <div class="nav-links">
                 <a href="/" class="nav-link">
                     <i class="fas fa-home"></i> 
@@ -229,44 +428,210 @@
                     <span>About</span>
                 </a>
             </div>
+            
+            <!-- Mobile Menu Hamburger Button -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open navigation menu">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- main dynamic content area -->
+    <!-- MOBILE MODAL MENU (Non-sticky, modal overlay) -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <button class="close-menu-btn" id="closeMobileMenuBtn" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="mobile-menu-card">
+            <div class="mobile-menu-header">
+                <h3><i class="fas fa-stethoscope"></i> DiabeScreen</h3>
+                <p>Smart health navigation</p>
+            </div>
+            <div class="mobile-menu-items">
+                <a href="/" class="mobile-nav-link" data-mobile="home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/history/" class="mobile-nav-link" data-mobile="history">
+                    <i class="fas fa-clock-rotate-left"></i> History
+                </a>
+                <a href="/metrics/" class="mobile-nav-link" data-mobile="metrics">
+                    <i class="fas fa-chart-line"></i> Metrics
+                </a>
+                <a href="/about/" class="mobile-nav-link" data-mobile="about">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+            </div>
+            <div style="padding: 1rem 1rem 1.5rem; border-top: 1px solid #e2e8f0; font-size: 0.7rem; color: #6c86a3;">
+                <i class="fas fa-shield-alt"></i> Secure & confidential
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dynamic Content -->
     <div class="main-content">
         <div class="page-card">
             {% block content %}
-            <!-- child templates will inject content here -->
+            <!-- Default Home Content (preview) -->
+            <div class="hero-welcome">
+                <i class="fas fa-chalkboard-user" style="font-size: 2.5rem; color: #2c9b77; margin-bottom: 0.5rem; display: inline-block;"></i>
+                <h1 style="font-weight: 700; font-size: 1.8rem; background: linear-gradient(135deg, #0f2b3d, #2c9b77); background-clip: text; -webkit-background-clip: text; color: transparent;">Diabetes Screening System</h1>
+                <p style="color: #334e68; margin-top: 0.5rem;">Evidence-based risk assessment & personalized insights</p>
+                <div style="height: 1px; background: linear-gradient(90deg, transparent, #cbd5e1, transparent); margin: 1.2rem auto; width: 60px;"></div>
+                <p>Quick, non-invasive screening using validated clinical parameters. Track your metabolic health over time.</p>
+                <button class="btn-demo" id="demoRiskBtn"><i class="fas fa-stethoscope"></i> Start Screening</button>
+                <div class="grid-stats">
+                    <div class="stat-card"><i class="fas fa-chart-simple"></i> <strong>98%</strong><br>sensitivity</div>
+                    <div class="stat-card"><i class="fas fa-users"></i> <strong>10k+</strong><br>assessments</div>
+                    <div class="stat-card"><i class="fas fa-brain"></i> <strong>AI</strong><br>powered</div>
+                </div>
+            </div>
             {% endblock %}
         </div>
-        <!-- subtle footer inside card wrapper but optional -->
         <div class="footer-note">
             <i class="fas fa-microscope"></i> Evidence-based screening | Secure & confidential
         </div>
     </div>
 
-    <!-- small script to highlight current page automatically based on URL -->
+    <!-- JavaScript for Mobile Menu Functionality -->
     <script>
         (function() {
-            // Automatically highlight active nav link based on current pathname
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                // exact match for root and dynamic matching for others
-                if (href === currentPath || 
-                    (href !== '/' && currentPath.startsWith(href)) ||
-                    (href === '/' && currentPath === '/')) {
-                    link.classList.add('active');
-                } else if (href === '/' && currentPath === '') {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
+            // Get DOM elements
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const closeBtn = document.getElementById('closeMobileMenuBtn');
+            const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            // Function to open mobile menu modal
+            function openMobileMenu() {
+                if (overlay) {
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+                }
+            }
+            
+            // Function to close mobile menu modal
+            function closeMobileMenu() {
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                }
+            }
+            
+            // Open menu when hamburger is clicked
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openMobileMenu();
+                });
+            }
+            
+            // Close menu when X button is clicked
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeMobileMenu();
+                });
+            }
+            
+            // Close menu when clicking on overlay background (outside the card)
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    // If the click target is the overlay itself (background), close
+                    if (e.target === overlay) {
+                        closeMobileMenu();
+                    }
+                });
+            }
+            
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay && overlay.classList.contains('active')) {
+                    closeMobileMenu();
                 }
             });
+            
+            // Close menu and allow navigation when any mobile link is clicked
+            if (mobileLinks) {
+                mobileLinks.forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        // Close the modal first, then navigation will happen naturally
+                        closeMobileMenu();
+                    });
+                });
+            }
+            
+            // Auto-highlight active navigation links based on current URL
+            const currentPath = window.location.pathname;
+            const desktopLinks = document.querySelectorAll('.nav-link');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            function updateActiveLinks() {
+                // Update desktop links
+                desktopLinks.forEach(function(link) {
+                    const href = link.getAttribute('href');
+                    let isActive = false;
+                    
+                    if (href === currentPath) {
+                        isActive = true;
+                    } else if (href !== '/' && currentPath.startsWith(href) && href !== '/') {
+                        isActive = true;
+                    } else if (href === '/' && (currentPath === '/' || currentPath === '')) {
+                        isActive = true;
+                    }
+                    
+                    if (isActive) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                
+                // Update mobile links
+                mobileNavLinks.forEach(function(link) {
+                    const href = link.getAttribute('href');
+                    let isActive = false;
+                    
+                    if (href === currentPath) {
+                        isActive = true;
+                    } else if (href !== '/' && currentPath.startsWith(href) && href !== '/') {
+                        isActive = true;
+                    } else if (href === '/' && (currentPath === '/' || currentPath === '')) {
+                        isActive = true;
+                    }
+                    
+                    if (isActive) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+            
+            updateActiveLinks();
+            
+            // Handle window resize: if resizing to desktop while menu open, close it
+            function handleResize() {
+                if (window.innerWidth > 768) {
+                    if (overlay && overlay.classList.contains('active')) {
+                        closeMobileMenu();
+                    }
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            
+            // Demo button interaction
+            const demoBtn = document.getElementById('demoRiskBtn');
+            if (demoBtn) {
+                demoBtn.addEventListener('click', function() {
+                    alert('✨ Smart screening simulation\nYour risk factors will be analyzed using ADA guidelines.\n(Full integration ready)');
+                });
+            }
+            
+            // Log that mobile menu is ready
+            console.log('Mobile menu initialized - non-sticky modal style');
         })();
     </script>
-
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>
